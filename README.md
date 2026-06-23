@@ -1,6 +1,6 @@
 # 🏡 Đồ án Smart Home & Hệ thống Cảnh báo Nhiệt độ (Version Teamwork)
 
-Dự án này là mã nguồn chia sẻ dành cho nhóm 5 người. Hệ thống được cấu trúc theo mô hình **Modular Programming (C++)**, mỗi tính năng là một cụm file `.h` và `.cpp` độc lập.
+Hệ thống được cấu trúc theo mô hình **Modular Programming (C++)**, mỗi tính năng là một cụm file `.h` và `.cpp` độc lập.
 
 ---
 

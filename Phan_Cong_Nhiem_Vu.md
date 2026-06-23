@@ -76,7 +76,7 @@ Dưới đây là mô tả chi tiết **Cần làm gì** và **Phải code ra sa
 
 ---
 
-## 🧠 Nhóm Trưởng: Điều phối & Hệ thống Cảnh báo (Core Logic)
+## 🧠 Điều phối & Hệ thống Cảnh báo (Core Logic)
 **Mục tiêu:** Quản lý logic báo động trung tâm và viết kịch bản ghép nối toàn bộ code của 4 nhóm trên chạy song song trơn tru.
 
 * **File tự viết code:** `firmware/src/AlertManager.cpp` và `firmware/src/main.cpp`
