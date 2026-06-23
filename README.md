@@ -6,7 +6,7 @@ Hệ thống được cấu trúc theo mô hình **Modular Programming (C++)**, 
 
 ## 🛠 1. HƯỚNG DẪN CÀI ĐẶT MÔI TRƯỜNG (BẮT BUỘC)
 
-Để code và chạy được dự án này, toàn bộ 5 thành viên trong nhóm **bắt buộc** phải cài đặt các phần mềm sau trên máy tính cá nhân:
+Để code và chạy được dự án này **bắt buộc** phải cài đặt các phần mềm sau trên máy tính cá nhân:
 
 ### 1.1. Cài đặt Trình soạn thảo & Biên dịch (VS Code + PlatformIO)
 1. Tải và cài đặt **[Visual Studio Code](https://code.visualstudio.com/)**.
