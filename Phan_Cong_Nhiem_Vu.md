@@ -7,10 +7,10 @@ Dưới đây là bảng phân công chi tiết cho từng thành viên:
 
 ---
 
-## 🧑‍💻 Thành viên 1: Chuyên gia Mạng & API (Network Communicator)
+## 🌐 Nhóm Mạng & Giao tiếp API (Network Communicator)
 **Nhiệm vụ chính:** Đảm bảo mạch ESP32 luôn có Internet và gửi được dữ liệu lên trang Web thành công.
 
-* **File phụ trách:** 
+* **File phụ trách (Tự viết code vào đây):** 
   * `firmware/include/NetworkManager.h`
   * `firmware/src/NetworkManager.cpp`
 * **Chức năng cần code:**
@@ -21,10 +21,10 @@ Dưới đây là bảng phân công chi tiết cho từng thành viên:
 
 ---
 
-## 🧑‍💻 Thành viên 2: Kỹ sư An ninh Ra Vào (Access Control & RFID)
+## 🔐 Nhóm An ninh Ra Vào (Access Control & RFID)
 **Nhiệm vụ chính:** Quản lý logic đọc thẻ từ và điều khiển khóa cửa (Servo).
 
-* **File phụ trách:** 
+* **File phụ trách (Tự viết code vào đây):** 
   * `firmware/include/DoorSystem.h`
   * `firmware/src/DoorSystem.cpp`
 * **Chức năng cần code:**
@@ -35,10 +35,10 @@ Dưới đây là bảng phân công chi tiết cho từng thành viên:
 
 ---
 
-## 🧑‍💻 Thành viên 3: Kỹ sư Cảm biến (Environment Data Acquisition)
+## 🌡 Nhóm Thu thập Cảm biến (Environment Data Acquisition)
 **Nhiệm vụ chính:** Đọc và làm sạch dữ liệu từ toàn bộ các cảm biến gắn trên mạch.
 
-* **File phụ trách:** 
+* **File phụ trách (Tự viết code vào đây):** 
   * `firmware/include/SensorManager.h`
   * `firmware/src/SensorManager.cpp`
 * **Chức năng cần code:**
@@ -49,10 +49,10 @@ Dưới đây là bảng phân công chi tiết cho từng thành viên:
 
 ---
 
-## 🧑‍💻 Thành viên 4: Kỹ sư Giao diện (HMI - Human Machine Interface)
+## 🖥 Nhóm Giao diện (HMI - Human Machine Interface)
 **Nhiệm vụ chính:** Giao tiếp với người dùng qua màn hình LCD và nút nhấn cứng.
 
-* **File phụ trách:** 
+* **File phụ trách (Tự viết code vào đây):** 
   * `firmware/include/DisplayUI.h`
   * `firmware/src/DisplayUI.cpp`
 * **Chức năng cần code:**
@@ -63,20 +63,20 @@ Dưới đây là bảng phân công chi tiết cho từng thành viên:
 
 ---
 
-## 🧑‍💻 Thành viên 5: Trưởng Nhóm (Core Logic & Alert System)
-**Nhiệm vụ chính:** Quản lý hệ thống cảnh báo (Còi/Đèn) và là người ghép nối code của 4 người kia lại với nhau để mạch chạy hoàn chỉnh.
+## 🧠 Nhóm Trưởng: Điều phối & Hệ thống Cảnh báo (Core Logic)
+**Nhiệm vụ chính:** Quản lý hệ thống cảnh báo (Còi/Đèn) và là người ghép nối code của các module kia lại với nhau để mạch chạy hoàn chỉnh.
 
-* **File phụ trách:** 
+* **File phụ trách (Tự viết code vào đây):** 
   * `firmware/include/AlertManager.h`
   * `firmware/src/AlertManager.cpp`
   * `firmware/src/main.cpp`
 * **Chức năng cần code:**
   1. Viết code băm xung bật/tắt Còi (Buzzer) và các đèn LED.
   2. Viết hàm tạo nhịp còi: Quẹt đúng thẻ thì kêu "Tít Tít" nhanh. Khi báo cháy thì hú dài liên tục và đèn LED đỏ chớp tắt liên tục (dùng millis).
-  3. **File ghép nối (`main.cpp`):** Gọi hàm `init()` của cả 4 bạn kia. Ở trong vòng `loop()`, viết logic tổng:
-     * *Logic Báo cháy:* Lấy nhiệt độ từ code của (Người 3). Nếu lớn hơn `TEMP_WARNING_THRESHOLD` -> Ra lệnh cho code của (Người 5) hú còi.
-     * *Logic Trộm:* Lấy trạng thái từ cảm biến MC-38 (Người 3), nếu cửa mở mà không có lệnh từ thẻ từ (Người 2) -> Kích hoạt còi hú (Người 5).
-     * *Logic Gửi Web:* Cứ mỗi 10 giây, lấy số liệu của (Người 3) quăng cho (Người 1) để gửi lên Web.
+  3. **File ghép nối (`main.cpp`):** Gọi hàm `init()` của tất cả các module. Ở trong vòng `loop()`, viết logic tổng:
+     * *Logic Báo cháy:* Lấy nhiệt độ từ code của (Nhóm Cảm biến). Nếu lớn hơn `TEMP_WARNING_THRESHOLD` -> Ra lệnh hú còi.
+     * *Logic Trộm:* Lấy trạng thái từ cảm biến MC-38, nếu cửa mở mà không có lệnh từ thẻ từ -> Kích hoạt còi hú.
+     * *Logic Gửi Web:* Cứ mỗi 10 giây, lấy số liệu của (Nhóm Cảm biến) quăng cho (Nhóm Mạng) để gửi lên Web.
 
 ---
 
