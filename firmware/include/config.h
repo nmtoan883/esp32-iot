@@ -11,10 +11,11 @@ extern const char* WIFI_PASSWORD;
 extern const char* SERVER_URL;
 
 // ==========================================
-// CẤU HÌNH THẺ TỪ (THÀNH VIÊN 2)
+// CẤU HÌNH THẺ TỪ & CỬA (THÀNH VIÊN 2)
 // ==========================================
 extern const String MASTER_RFID_UID_1;
 extern const String MASTER_RFID_UID_2;
+extern const unsigned long DOOR_OPEN_TIME;
 
 // ==========================================
 // CHÂN KẾT NỐI ESP32
@@ -48,6 +49,5 @@ extern const String MASTER_RFID_UID_2;
 // ==========================================
 extern const float TEMP_WARNING_THRESHOLD;
 extern const int LIGHT_DARK_THRESHOLD;
-extern const unsigned long DOOR_OPEN_TIME;
 
 #endif
