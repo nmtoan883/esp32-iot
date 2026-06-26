@@ -3,6 +3,21 @@
 
 #include <Arduino.h>
 
-// TODO: (Người 5) Khai báo class và các hàm tại đây
+class AlertManager {
+public:
+    void init();
+    void loop();
+    
+    void beepSuccess();
+    void triggerAlarm();
+    void stopAlarm();
+    bool getAlarmState();
+
+private:
+    bool isAlarming = false;
+    unsigned long lastAlarmToggleTime = 0;
+    bool alarmState = false;
+};
 
 #endif
+
