@@ -5,7 +5,7 @@
 // INCLUDE CÁC MODULE
 // Nhóm 5 (Core Logic) ghép tất cả vào đây
 // ==========================================
-#include "wifi_manager.h"   // Nhóm 1 — Mạng & API
+#include "NetworkManager.h" // Nhóm 1 — Mạng & API
 // #include "DoorSystem.h"  // Nhóm 2 — RFID & Cửa       (uncomment khi Nhóm 2 xong)
 // #include "SensorManager.h" // Nhóm 3 — Cảm biến        (uncomment khi Nhóm 3 xong)
 // #include "DisplayUI.h"   // Nhóm 4 — Màn hình LCD      (uncomment khi Nhóm 4 xong)
