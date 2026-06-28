@@ -1,5 +1,4 @@
 # BẢNG PHÂN CÔNG NHIỆM VỤ PHÁT TRIỂN WEB DASHBOARD (IOT)
-**Số lượng thành viên:** 05
 
 > *Để đảm bảo tính thực tế hệ thống Web Dashboard được nâng cấp với tính năng **Xác thực người dùng (Authentication)**. Chỉ những người có tài khoản mới được phép xem dữ liệu Smart Home.*
 
