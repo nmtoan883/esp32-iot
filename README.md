@@ -1,97 +1,53 @@
-# 🏡 Đồ án Smart Home & Hệ thống Cảnh báo Nhiệt độ (Version Teamwork)
+# 🏡 Smart Home IoT System - Cảnh báo Nhiệt độ & Kiểm soát Cửa
 
-Hệ thống được cấu trúc theo mô hình **Modular Programming (C++)**, mỗi tính năng là một cụm file `.h` và `.cpp` độc lập.
-
----
-
-## 🛠 1. HƯỚNG DẪN CÀI ĐẶT MÔI TRƯỜNG (BẮT BUỘC)
-
-Để code và chạy được dự án này **bắt buộc** phải cài đặt các phần mềm sau trên máy tính cá nhân:
-
-### 1.1. Cài đặt Trình soạn thảo & Biên dịch (VS Code + PlatformIO)
-1. Tải và cài đặt **[Visual Studio Code](https://code.visualstudio.com/)**.
-2. Mở VS Code, chọn biểu tượng **Extensions** (Cục xếp hình vuông ở bên trái).
-3. Gõ tìm kiếm và cài đặt Extension có tên: **`PlatformIO IDE`** (Biểu tượng cái đầu kiến). Chờ nó tự động tải các gói phụ trợ (sẽ hơi lâu).
-4. Khởi động lại VS Code sau khi cài xong.
-
-### 1.2. Cài đặt Driver Nạp Code cho mạch ESP32
-* Tùy thuộc vào loại mạch ESP32 nhóm đang dùng, hãy tải driver tương ứng:
-  * Nếu chip USB hình chữ nhật nhỏ: Cài driver **`CP210x`**.
-  * Nếu chip USB hình chữ nhật dài: Cài driver **`CH340`**.
-* Nếu cắm mạch vào máy tính mà PlatformIO không nhận cổng `COM`, nghĩa là bạn chưa cài đúng driver.
-
-### 1.3. Cài đặt Máy chủ Web Local (XAMPP)
-*(Đặc biệt dành cho người test và chạy thử trang Web)*
-1. Tải và cài đặt phần mềm **[XAMPP](https://www.apachefriends.org/download.html)**.
-2. Mở XAMPP Control Panel, bấm nút **Start** ở 2 dòng: `Apache` và `MySQL`.
+Chào mừng bạn đến với dự án **Smart Home IoT**. Dự án này là sự kết hợp hoàn hảo giữa phần cứng nhúng (ESP32) và hệ thống Web Server nội bộ để giám sát nhiệt độ và lịch sử ra vào cửa bằng thẻ từ.
 
 ---
 
-## 📚 2. DANH SÁCH THƯ VIỆN CẦN CÀI ĐẶT (LIBRARIES)
+## 🚀 Hướng dẫn Cài đặt & Khởi động nhanh (Quick Start)
 
-Dự án này sử dụng các thư viện bên thứ 3. Nếu bạn mở dự án bằng PlatformIO (mở thư mục `firmware`), PlatformIO sẽ **tự động tải** các thư viện này dựa trên file `platformio.ini`. 
+Hệ thống được thiết kế theo cơ chế **Tự động hóa (Auto-Migration)**, bạn không cần phải thao tác tạo Database bằng tay trong phpMyAdmin. Chỉ cần làm theo đúng 4 bước dưới đây để hệ thống chạy 100%.
 
-Tuy nhiên, nếu nhóm xài Arduino IDE hoặc cần cài thủ công, đây là danh sách chính xác các thư viện phải có:
-1. **`DHT sensor library`** (của Adafruit) - Đọc cảm biến nhiệt độ DHT11.
-2. **`Adafruit Unified Sensor`** (của Adafruit) - Thư viện nền tảng bắt buộc đi kèm với DHT.
-3. **`MFRC522`** (của GithubCommunity) - Thư viện đọc thẻ từ RFID qua chuẩn SPI.
-4. **`ESP32Servo`** (của Kevin Harrington) - Thư viện chuyên biệt để điều khiển động cơ Servo trên chip ESP32 (Không dùng thư viện Servo mặc định của Arduino).
-5. **`LiquidCrystal_I2C`** (của marcoschwartz) - Thư viện điều khiển màn hình LCD qua chuẩn I2C.
-6. **`ArduinoJson`** (của Benoit Blanchon) - Dùng để đóng gói dữ liệu thành JSON trước khi gửi lên Web.
+### Bước 1: Khởi động Cơ sở dữ liệu (Database)
+1. Mở phần mềm **XAMPP Control Panel**.
+2. Nhấn nút **Start** ở hàng **MySQL** (đảm bảo nó chuyển sang màu xanh lá cây).
+*(Lưu ý: Không cần bật Apache vì chúng ta sẽ tự chạy Server riêng cho an toàn).*
 
----
-
-## 🔌 3. BẢNG THÔNG SỐ CÁC CHÂN ESP32 (PINOUT & WIRING)
-
-**LƯU Ý CỰC KỲ QUAN TRỌNG CHO TEAM CODE:** 
-Đây là bảng phần cứng ĐÃ CHỐT. Các thành viên dựa đúng vào bảng này để code khai báo chân (`pinMode`), tránh việc người này code chân 4 mà người kia lại cắm chân 5.
-
-| Tên Thiết Bị / Linh Kiện | Chân trên Linh Kiện | Cắm vào chân ESP32 | Loại Tín Hiệu (Dành cho Coder) |
-| :--- | :--- | :--- | :--- |
-| **Cảm biến Nhiệt Ẩm (DHT11)** | DATA | `D4` | Kỹ thuật số (Thư viện DHT tự lo) |
-| **Cảm biến Ánh sáng (LDR)** | AO (Analog Out) | `D34` | **Analog Input** (Dùng `analogRead()`) |
-| **Cảm biến Chuyển động (PIR)**| OUT | `D14` | **Digital Input** (`HIGH` = Có người) |
-| **Cửa từ (MC-38)** | Dây tín hiệu | `D25` | **Digital Input** (`HIGH` = Cửa bị mở) |
-| **Nút nhấn MODE** | Chân tín hiệu | `D26` | **Digital Input PULLUP** (`LOW` = Bấm) |
-| **Nút nhấn DOOR** | Chân tín hiệu | `D27` | **Digital Input PULLUP** (`LOW` = Bấm) |
-| **Còi Báo động (Buzzer)** | Chân Dương (+) | `D13` | **Digital Output** (`HIGH` = Kêu) |
-| **Đèn LED Đỏ (Cảnh báo)** | Chân Dương (+) | `D12` | **Digital Output** (*Rút dây ra khi nạp code*) |
-| **Đèn LED Xanh (An toàn)** | Chân Dương (+) | `D32` | **Digital Output** |
-| **Màn hình LCD 1602 I2C** | SDA, SCL | `D21` (SDA), `D22` (SCL) | Giao tiếp I2C (Thư viện tự lo) |
-| **Động cơ Servo (Cửa)** | Dây Cam (Signal) | `D33` | Băm xung PWM (Thư viện tự lo) |
-| **Đầu đọc Thẻ từ (RFID)** | SDA (SS) | `D5` | Giao tiếp SPI (*Rút dây ra khi nạp code*) |
-| | RST | `D15` | Giao tiếp SPI (*Rút dây ra khi nạp code*) |
-| | SCK, MOSI, MISO | `D18`, `D23`, `D19`| Các chân SPI mặc định của mạch ESP32 |
-
-> ⚠️ **LƯU Ý NGUỒN ĐIỆN ĐẤU NỐI:** 
-> * Mạch RFID RC522 **bắt buộc** dùng nguồn **3.3V** (Chân 3V3). Cắm 5V sẽ cháy mạch.
-> * Các linh kiện còn lại (LCD, PIR, Buzzer) xài nguồn **5V** (Chân VIN).
-> * Khi nạp code, bắt buộc phải rút 3 dây tín hiệu ở các chân: **D12, D5, D15** ra. Đợi báo *Connecting...* thì nhấn giữ nút `BOOT`. Nạp xong cắm 3 dây lại và nhấn nút `EN` để mạch chạy.
-
----
-
-## 📌 4. PHÂN CÔNG NHIỆM VỤ THÀNH VIÊN
-Để biết chi tiết ai đảm nhận viết File nào và code chức năng gì, vui lòng đọc kỹ file: 
-👉 **[Phan_Cong_Nhiem_Vu.md](Phan_Cong_Nhiem_Vu.md)** đính kèm trong dự án này.
-
----
-
-## 🚀 5. HƯỚNG DẪN BIÊN DỊCH VÀ NẠP CODE (UPLOAD)
-
-Khi các thành viên đã viết xong code, để nạp (flash) code xuống vi điều khiển ESP32, hãy làm theo các bước sau:
-
-**Cách 1: Dùng Giao diện (Dễ nhất)**
-1. Mở thư mục `firmware` bằng VS Code.
-2. Nhìn xuống thanh công cụ màu xanh dương ở góc dưới cùng bên trái màn hình.
-3. Bấm vào biểu tượng **Mũi tên chỉ sang phải (→)** để tiến hành Build và Upload.
-4. Bấm vào biểu tượng **Phích cắm** để mở Serial Monitor xem log mạch chạy.
-
-**Cách 2: Dùng dòng lệnh Terminal (Chuyên nghiệp)**
-1. Mở Terminal trong VS Code (`Ctrl` + `~`).
-2. Di chuyển vào thư mục code: `cd firmware`
-3. Gõ lệnh sau để nạp code và tự động mở bảng theo dõi:
+### Bước 2: Bật Web Server (Port 8000)
+Hệ thống sử dụng cổng `8000` để tránh xung đột với các phần mềm khác.
+1. Mở Terminal hoặc Command Prompt.
+2. Di chuyển vào thư mục chứa mã nguồn Web:
    ```bash
-   pio run -t upload -t monitor
+   cd "D:\Canh bao nhiet\SmartHome_Final\web_dashboard"
    ```
+3. Khởi chạy PHP Server cục bộ bằng lệnh sau (đường dẫn `php.exe` phụ thuộc vào nơi bạn cài XAMPP):
+   ```bash
+   D:\xampp\php\php.exe -S 0.0.0.0:8000
+   ```
+   *Nếu bạn cài XAMPP ở ổ C, hãy dùng lệnh `C:\xampp\php\php.exe -S 0.0.0.0:8000`.*
+4. Sau khi thấy thông báo `Listening on http://0.0.0.0:8000`, **hãy treo nguyên cửa sổ Terminal này** (không được tắt).
 
-*(Lưu ý: Luôn nhớ rút 3 chân `D12`, `D5`, `D15` ra trước khi bấm lệnh nạp, và nhấn giữ nút BOOT trên mạch khi Terminal hiện chữ `Connecting...`)*
+### Bước 3: Nạp Code cho mạch ESP32
+1. Sử dụng VS Code (đã cài PlatformIO).
+2. Kết nối mạch ESP32 vào máy tính qua cáp USB.
+3. Mở một Terminal mới (bấm dấu `+`) và chạy lệnh sau để nạp Code:
+   ```bash
+   cd "D:\Canh bao nhiet\SmartHome_Final\firmware"
+   C:\Users\nmtoa\.platformio\penv\Scripts\pio.exe run -t upload
+   ```
+   *(Nhớ nhấn giữ nút BOOT trên mạch nếu màn hình hiện `Connecting...`)*
+
+### Bước 4: Xem kết quả trên Web Dashboard
+1. Mở trình duyệt Web (Chrome / Edge / Safari).
+2. Truy cập vào địa chỉ: **http://localhost:8000/**
+3. Ngay lập tức, bạn sẽ thấy Giao diện Giám sát (Dashboard) hiện ra. Database `iot_db` sẽ được tự động tạo ngầm nhờ vào script Auto-Migration. Dữ liệu nhiệt độ sẽ hiển thị theo thời gian thực!
+
+---
+
+## 🔧 Các tính năng chính của dự án:
+- **Tự động hóa hoàn toàn:** Tự động dò và tạo CSDL MySQL.
+- **Biểu đồ Real-time:** Cập nhật liên tục 2 giây/lần mà không cần tải lại trang.
+- **Dark Mode chuyên nghiệp:** Giao diện tối ưu cho giám sát an ninh.
+- **Cấu hình WiFi thông minh (Captive Portal):** Chỉ cần điện thoại kết nối vào WiFi nội bộ của ESP32 để thiết lập IP Server mà không cần hard-code mật khẩu WiFi vào mạch.
+
+> *Dự án được phát triển và tối ưu hóa phục vụ Đồ án Học phần.*
