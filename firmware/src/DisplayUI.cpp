@@ -48,6 +48,10 @@ void DisplayUI::updateSensorDisplay(float temp, float hum) {
         lcd.print("H:");
         lcd.print(hum, 0); // Không lấy số thập phân
         lcd.print("%  ");
+        
+        // Cập nhật hàng 2 để xóa chữ "Initializing..."
+        lcd.setCursor(0, 1);
+        lcd.print("System Ready    ");
     }
 }
 

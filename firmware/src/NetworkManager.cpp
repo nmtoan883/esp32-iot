@@ -21,13 +21,13 @@ void initWiFi() {
 
     WiFiManager wm;
     
-    // Mở bộ nhớ để lấy URL đã lưu
+    // Mở bộ nhớ để lấy IP đã lưu
     preferences.begin("smarthome", false);
-    String savedUrl = preferences.getString("server_url", "http://192.168.1.xxx/Canh_bao_nhiet/web_dashboard/api/save_data.php");
+    String savedIp = preferences.getString("server_ip", "192.168.x.x");
     
-    // Tạo ô nhập liệu cho SERVER_URL
-    WiFiManagerParameter custom_server_url("server_url", "Server URL (API save_data.php)", savedUrl.c_str(), 100);
-    wm.addParameter(&custom_server_url);
+    // Tạo ô nhập liệu cho SERVER_IP
+    WiFiManagerParameter custom_server_ip("server_ip", "IP May Tinh (VD: 192.168.1.15)", savedIp.c_str(), 40);
+    wm.addParameter(&custom_server_ip);
 
     // Cài đặt giao diện
     wm.setConfigPortalTimeout(180); // Chờ 3 phút, nếu không ai kết nối thì tự khởi động lại hoặc thử lại
@@ -39,12 +39,15 @@ void initWiFi() {
         ESP.restart();
     }
 
-    // Đã kết nối thành công! Lấy URL mới nhất do người dùng nhập (nếu có)
-    _baseUrl = String(custom_server_url.getValue());
+    // Đã kết nối thành công! Lấy IP mới nhất do người dùng nhập
+    String inputIp = String(custom_server_ip.getValue());
     
-    // Lưu URL mới vào bộ nhớ
-    preferences.putString("server_url", _baseUrl);
+    // Lưu IP mới vào bộ nhớ
+    preferences.putString("server_ip", inputIp);
     preferences.end();
+
+    // Ghép thành đường dẫn hoàn chỉnh
+    _baseUrl = "http://" + inputIp + ":8000/api/save_data.php";
 
     Serial.println();
     Serial.println("[WiFi] Ket noi thanh cong!");
@@ -76,7 +79,7 @@ void resetWiFi() {
     wm.resetSettings(); // Xóa WiFi
     
     preferences.begin("smarthome", false);
-    preferences.remove("server_url"); // Xóa URL
+    preferences.remove("server_ip"); // Xóa IP
     preferences.end();
     
     delay(1000);
