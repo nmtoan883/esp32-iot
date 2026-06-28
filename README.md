@@ -30,10 +30,10 @@ Hệ thống sử dụng cổng `8000` để tránh xung đột với các phầ
 ### Bước 3: Nạp Code cho mạch ESP32
 1. Sử dụng VS Code (đã cài PlatformIO).
 2. Kết nối mạch ESP32 vào máy tính qua cáp USB.
-3. Mở một Terminal mới (bấm dấu `+`) và chạy lệnh sau để nạp Code:
+3. Trong VS Code, bạn mở thư mục **`firmware`** (File -> Open Folder -> Chọn thư mục firmware).
+4. Mở Terminal (Terminal -> New Terminal) và chạy lệnh sau để nạp Code:
    ```bash
-   cd "D:\Canh bao nhiet\SmartHome_Final\firmware"
-   C:\Users\nmtoa\.platformio\penv\Scripts\pio.exe run -t upload
+   pio run -t upload
    ```
    *(Nhớ nhấn giữ nút BOOT trên mạch nếu màn hình hiện `Connecting...`)*
 

@@ -1,7 +1,4 @@
 # BẢNG PHÂN CÔNG NHIỆM VỤ PHÁT TRIỂN WEB DASHBOARD (IOT)
-**Số lượng thành viên:** 05
-
-> *Đây là bảng phân công chuyên biệt dành riêng cho việc phát triển hệ thống Website Giám sát (Web Dashboard) của hệ thống Smart Home, đảm bảo cả 5 thành viên đều có khối lượng lập trình đồng đều và logic tương trợ lẫn nhau.*
 
 ---
 
