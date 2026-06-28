@@ -30,7 +30,7 @@ DoorSystem   door;
 
 SensorManager  sensor;   // Uncomment khi Nhom 3 xong
 DisplayUI      display;  // Uncomment khi Nhom 4 xong
-NetworkManager network;  // Uncomment khi Nhom 1 xong
+// NetworkManager network;  // Uncomment khi Nhom 1 xong
 
 // ==========================================
 // BO DEM GUI DU LIEU LEN SERVER (10 giay / lan)
@@ -54,7 +54,7 @@ void setup() {
 
     sensor.init();  // 3. Cam bien (Nhom 3)
     display.init(); // 4. Man hinh LCD (Nhom 4)
-    network.init(); // 5. Mang WiFi (Nhom 1)
+    initWiFi(); // 5. Mang WiFi (Nhom 1)
 
     Serial.println("[main] Khoi tao xong. He thong san sang.");
     Serial.println("----------------------------------------------");
@@ -73,7 +73,7 @@ void loop() {
 
     sensor.loop();  // Cap nhat DHT11 moi 2 giay (Nhom 3)
     display.loop(); // Lam moi man hinh LCD (Nhom 4)
-    network.loop(); // Kiem tra va giu ket noi WiFi (Nhom 1)
+    maintainWiFi(); // Kiem tra va giu ket noi WiFi (Nhom 1)
 
     // ==========================================
     // BUOC 2: DOC DU LIEU CAM BIEN
@@ -137,7 +137,7 @@ void loop() {
     unsigned long now = millis();
     if (now - lastWebPushTime >= WEB_PUSH_INTERVAL) {
         lastWebPushTime = now;
-        network.sendDataToServer(temperature, humidity);
+        sendSensorData(temperature, humidity, 0.0);
         Serial.println("[main] Da gui du lieu len server.");
     }
 
