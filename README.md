@@ -18,7 +18,7 @@ Hệ thống sử dụng cổng `8000` để tránh xung đột với các phầ
 1. Mở Terminal hoặc Command Prompt.
 2. Di chuyển vào thư mục chứa mã nguồn Web:
    ```bash
-   cd "D:\Canh bao nhiet\SmartHome_Final\web_dashboard"
+   cd web_dashboard"
    ```
 3. Khởi chạy PHP Server cục bộ bằng lệnh sau (đường dẫn `php.exe` phụ thuộc vào nơi bạn cài XAMPP):
    ```bash

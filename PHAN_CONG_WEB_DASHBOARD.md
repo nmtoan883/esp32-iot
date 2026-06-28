@@ -33,4 +33,4 @@
 - **Responsive (Tương thích Mobile):** Bổ sung code CSS Media Queries (`@media screen`) để giao diện Web vẫn hiển thị đẹp và bảng biểu đồ không bị méo khi người dùng xem qua màn hình điện thoại di động.
 
 ---
-**Nhận xét:** Bảng phân công này đảm bảo cả 5 người đều tham gia trực tiếp vào việc gõ code Web (Từ MySQL -> PHP Backend -> HTML/CSS -> Javascript DOM -> Javascript API). Các thành viên có tính phụ thuộc dây chuyền, bắt buộc phải teamwork chặt chẽ để hệ thống Web chạy thành công.
+**Nhận xét:** (Từ MySQL -> PHP Backend -> HTML/CSS -> Javascript DOM -> Javascript API).
