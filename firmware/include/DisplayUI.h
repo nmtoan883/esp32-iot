@@ -12,11 +12,14 @@ public:
     void updateSensorDisplay(float temp, float hum);
 
     bool isModeButtonPressed();
+    bool isModeButtonHeld(unsigned long holdTimeMs); // Mới thêm
     bool isDoorButtonPressed();
 
 private:
     unsigned long lastLcdUpdate = 0;
+    unsigned long modeButtonPressTime = 0;
     bool lastModeState = HIGH;
+    bool isHoldingMode = false;
     bool lastDoorState = HIGH;
 };
 

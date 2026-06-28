@@ -74,6 +74,15 @@ void loop() {
     sensor.loop();  // Cap nhat DHT11 moi 2 giay (Nhom 3)
     display.loop(); // Lam moi man hinh LCD (Nhom 4)
     maintainWiFi(); // Kiem tra va giu ket noi WiFi (Nhom 1)
+    
+    // Nút Mode cũng được dùng để Reset cấu hình mạng nếu giữ 5 giây
+    // Phải gọi hàm isModeButtonPressed() ở đâu đó để cập nhật trạng thái nút bấm
+    // (Ta gọi nó nhẹ ở đây để track việc giữ phím, nhưng nếu có code xử lý click thì cẩn thận)
+    display.isModeButtonPressed();
+    if (display.isModeButtonHeld(5000)) {
+        display.showMessage("RESETTING WIFI", "PLEASE WAIT...");
+        resetWiFi();
+    }
 
     // ==========================================
     // BUOC 2: DOC DU LIEU CAM BIEN

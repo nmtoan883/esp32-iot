@@ -4,11 +4,7 @@
 #include <Arduino.h>
 
 // ==========================================
-// THÔNG TIN MẠNG (THÀNH VIÊN 1)
-// ==========================================
-extern const char* WIFI_SSID;
-extern const char* WIFI_PASSWORD;
-extern const char* SERVER_URL;
+// Các cấu hình mạng được quản lý qua WiFiManager (Lưu ở ROM)
 
 // ==========================================
 // CẤU HÌNH THẺ TỪ & CỬA (THÀNH VIÊN 2)

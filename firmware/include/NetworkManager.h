@@ -30,4 +30,7 @@ bool sendRFIDLog(const String& uid);
 // Trả về chuỗi lệnh JSON từ server, hoặc "" nếu không có lệnh / lỗi mạng
 String fetchServerCommand();
 
+// Reset cài đặt mạng và xóa SERVER_URL (gọi khi đè nút Mode 5 giây)
+void resetWiFi();
+
 #endif

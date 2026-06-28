@@ -1,9 +1,6 @@
 #include "config.h"
 
-// Cấu hình Mạng (Cập nhật đúng IP IPv4 của máy tính)
-const char* WIFI_SSID = "VITAMIN COFFEE";
-const char* WIFI_PASSWORD = "79797979";
-const char* SERVER_URL = "http://192.168.1.212/Canh_bao_nhiet/web_dashboard/api/save_data.php"; 
+// Cấu hình mạng đã chuyển sang WiFiManager (Lưu trên EEPROM)
 
 // Mã thẻ Master UID
 const String MASTER_RFID_UID_1 = "A1 21 34 16";

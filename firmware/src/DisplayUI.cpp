@@ -60,11 +60,23 @@ bool DisplayUI::isModeButtonPressed() {
         delay(50); // Thuật toán chống dội phím cơ bản (Debounce)
         if (digitalRead(BTN_MODE_PIN) == LOW) {
             pressed = true;
+            modeButtonPressTime = millis();
+            isHoldingMode = true;
         }
+    } else if (currentState == HIGH && lastModeState == LOW) {
+        isHoldingMode = false;
     }
     
     lastModeState = currentState;
     return pressed;
+}
+
+bool DisplayUI::isModeButtonHeld(unsigned long holdTimeMs) {
+    if (isHoldingMode && (millis() - modeButtonPressTime >= holdTimeMs)) {
+        isHoldingMode = false; // Ngăn chặn kích hoạt nhiều lần liên tiếp
+        return true;
+    }
+    return false;
 }
 
 bool DisplayUI::isDoorButtonPressed() {

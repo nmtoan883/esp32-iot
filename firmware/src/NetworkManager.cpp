@@ -3,58 +3,84 @@
 
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <WiFiManager.h>
+#include <Preferences.h>
 
 // ==========================================
-// Cấu hình endpoint server — lấy từ config.h
-// SERVER_URL đã được khai báo trong config.cpp
-// Tách endpoint save và get từ base URL
+// Cấu hình endpoint server
 // ==========================================
-
-// Ví dụ SERVER_URL = "http://192.168.1.212/Canh_bao_nhiet/web_dashboard/api/save_data.php"
-// Ta cũng tạo thêm endpoint get_data dựa trên cùng base path
-static String _baseUrl; // Sẽ được khởi tạo trong initWiFi()
+static String _baseUrl; 
+Preferences preferences;
 
 // ==========================================
-// initWiFi() — Kết nối WiFi lần đầu
+// initWiFi() — Kết nối WiFi qua Captive Portal
 // ==========================================
 void initWiFi() {
     Serial.println("==========================================");
-    Serial.println("[WiFi] Dang ket noi mang...");
-    Serial.print("[WiFi] SSID: ");
-    Serial.println(WIFI_SSID);
+    Serial.println("[WiFi] Khoi tao WiFiManager...");
 
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    WiFiManager wm;
+    
+    // Mở bộ nhớ để lấy URL đã lưu
+    preferences.begin("smarthome", false);
+    String savedUrl = preferences.getString("server_url", "http://192.168.1.xxx/Canh_bao_nhiet/web_dashboard/api/save_data.php");
+    
+    // Tạo ô nhập liệu cho SERVER_URL
+    WiFiManagerParameter custom_server_url("server_url", "Server URL (API save_data.php)", savedUrl.c_str(), 100);
+    wm.addParameter(&custom_server_url);
 
-    int counter = 0;
-    while (WiFi.status() != WL_CONNECTED && counter < 20) {
-        delay(500);
-        Serial.print(".");
-        counter++;
+    // Cài đặt giao diện
+    wm.setConfigPortalTimeout(180); // Chờ 3 phút, nếu không ai kết nối thì tự khởi động lại hoặc thử lại
+    
+    // Bắt đầu phát WiFi Setup
+    if (!wm.autoConnect("SmartHome_Setup")) {
+        Serial.println("[WiFi] Khong the ket noi. Tu dong khoi dong lai sau 3s...");
+        delay(3000);
+        ESP.restart();
     }
 
-    if (WiFi.status() == WL_CONNECTED) {
-        Serial.println();
-        Serial.println("[WiFi] Ket noi thanh cong!");
-        Serial.print("[WiFi] IP Address: ");
-        Serial.println(WiFi.localIP());
-    } else {
-        Serial.println();
-        Serial.println("[WiFi] Ket noi khong thanh cong. He thong se thu lai sau.");
-    }
+    // Đã kết nối thành công! Lấy URL mới nhất do người dùng nhập (nếu có)
+    _baseUrl = String(custom_server_url.getValue());
+    
+    // Lưu URL mới vào bộ nhớ
+    preferences.putString("server_url", _baseUrl);
+    preferences.end();
+
+    Serial.println();
+    Serial.println("[WiFi] Ket noi thanh cong!");
+    Serial.print("[WiFi] IP Address: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("[WiFi] Server URL: ");
+    Serial.println(_baseUrl);
     Serial.println("==========================================");
 }
 
-
 // ==========================================
-// maintainWiFi() — Chống rớt mạng (không delay)
+// maintainWiFi() — Tự động xử lý nếu rớt mạng
 // ==========================================
 void maintainWiFi() {
     if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("[WiFi] Mat song, dang thuc hien ket noi lai...");
-        WiFi.disconnect();
-        WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+        Serial.println("[WiFi] Rot mang! Dang thu ket noi lai...");
+        // WiFiManager tự động lo việc kết nối lại dưới nền của ESP32, 
+        // nhưng nếu mất mạng quá lâu ta có thể gọi ESP.restart()
+        delay(1000);
     }
+}
+
+// ==========================================
+// resetWiFi() — Xóa dữ liệu WiFi và URL
+// ==========================================
+void resetWiFi() {
+    Serial.println("[WiFi] XOA TOAN BO CAU HINH WIFI VA KHOI DONG LAI...");
+    WiFiManager wm;
+    wm.resetSettings(); // Xóa WiFi
+    
+    preferences.begin("smarthome", false);
+    preferences.remove("server_url"); // Xóa URL
+    preferences.end();
+    
+    delay(1000);
+    ESP.restart();
 }
 
 
@@ -70,7 +96,7 @@ bool sendSensorData(float temp, float humid, float light) {
     }
 
     HTTPClient http;
-    http.begin(SERVER_URL);
+    http.begin(_baseUrl);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
     // Đóng gói dữ liệu dạng form
@@ -115,7 +141,7 @@ bool sendRFIDLog(const String& uid) {
     }
 
     HTTPClient http;
-    http.begin(SERVER_URL);
+    http.begin(_baseUrl);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
     String postData = "type=rfid&uid=" + uid;
@@ -156,7 +182,7 @@ String fetchServerCommand() {
 
     // Xây dựng URL get_data từ SERVER_URL
     // SERVER_URL trỏ tới save_data.php → thay bằng get_data.php
-    String getUrl = String(SERVER_URL);
+    String getUrl = _baseUrl;
     getUrl.replace("save_data.php", "get_data.php");
     getUrl += "?cmd=1";
 
