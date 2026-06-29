@@ -40,6 +40,9 @@ extern const unsigned long DOOR_OPEN_TIME;
 #define BTN_MODE_PIN 26
 #define BTN_DOOR_PIN 27
 
+// Relay Quạt làm mát (Auto Mode)
+#define FAN_RELAY_PIN 16
+
 // ==========================================
 // NGƯỠNG CẢNH BÁO (THÀNH VIÊN 3 & 5)
 // ==========================================

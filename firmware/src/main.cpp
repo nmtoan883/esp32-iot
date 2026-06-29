@@ -49,6 +49,9 @@ void setup() {
     Serial.println("==============================================");
 
     // Khoi tao cac module theo thu tu
+    pinMode(FAN_RELAY_PIN, OUTPUT);
+    digitalWrite(FAN_RELAY_PIN, HIGH); // Tắt quạt mặc định (Kích mức thấp nên HIGH là Tắt)
+    
     alert.init();    // 1. He thong canh bao (AlertManager)
     door.init();     // 2. He thong cua RFID (DoorSystem)
 
@@ -75,13 +78,30 @@ void loop() {
     display.loop(); // Lam moi man hinh LCD (Nhom 4)
     maintainWiFi(); // Kiem tra va giu ket noi WiFi (Nhom 1)
     
-    // Nút Mode cũng được dùng để Reset cấu hình mạng nếu giữ 5 giây
-    // Phải gọi hàm isModeButtonPressed() ở đâu đó để cập nhật trạng thái nút bấm
-    // (Ta gọi nó nhẹ ở đây để track việc giữ phím, nhưng nếu có code xử lý click thì cẩn thận)
-    display.isModeButtonPressed();
+    // ==========================================
+    // XỬ LÝ NÚT NHẤN VẬT LÝ
+    // ==========================================
+    if (display.isModeButtonPressed()) {
+        alert.stopAlarm(); // Nhấn nút Mode 1 cái để tắt còi rú khẩn cấp
+    }
     if (display.isModeButtonHeld(5000)) {
         display.showMessage("RESETTING WIFI", "PLEASE WAIT...");
-        resetWiFi();
+        resetWiFi(); // Nhấn giữ nút Mode 5 giây để xóa Wifi
+    }
+    
+    if (display.isDoorButtonPressed()) {
+        door.unlockDoor(); // Nhấn nút Door để mở cửa từ bên trong
+        Serial.println("[main] Nut Door: Da mo cua tu ben trong.");
+        display.showMessage("CUA DA MO", "XIN MOI RA");
+    }
+
+    // ==========================================
+    // KICH BAN 8: CHỐNG KẸP CỬA THÔNG MINH (PIR)
+    // Nếu cửa ĐANG MỞ mà phát hiện CÒN NGƯỜI đứng đó, 
+    // tự động gia hạn thêm thời gian, không cho phép đóng cửa!
+    // ==========================================
+    if (door.getDoorState() && sensor.isMotionDetected()) {
+        door.unlockDoor(); // Việc gọi lại hàm này sẽ Reset bộ đếm lùi về lại 0
     }
 
     // ==========================================
@@ -92,16 +112,21 @@ void loop() {
     float humidity    = sensor.getHumidity();
 
     // ==========================================
-    // KICH BAN 1: BAO CHAY
-    // Neu nhiet do > nguong (38°C) -> kich hoat bao dong
+    // KICH BAN 1: BAO CHAY & QUAT LAM MAT
+    // Neu nhiet do > nguong -> kich hoat bao dong va bat quat
     // ==========================================
     if (temperature > TEMP_WARNING_THRESHOLD) {
+        digitalWrite(FAN_RELAY_PIN, LOW); // Bật quạt thông gió (Relay kích mức thấp)
+        door.unlockDoor();                // Tự động mở cửa thoát hiểm
+        
         if (!alert.isCurrentlyAlarming()) {
             alert.triggerFireAlarm();
             display.showMessage("!!! CANH BAO !!!", "NHIET DO CAO!");
             Serial.print("[main] BAO CHAY! Nhiet do: ");
             Serial.println(temperature);
         }
+    } else {
+        digitalWrite(FAN_RELAY_PIN, HIGH); // Tắt quạt nếu nhiệt độ an toàn
     }
 
     // ==========================================
@@ -124,8 +149,9 @@ void loop() {
     int rfidResult = door.getLastScanResult();
 
     if (rfidResult == RFID_ACCEPTED) {
+        alert.stopAlarm(); // Tắt báo động nếu chủ nhà về quẹt thẻ
         alert.beepSuccess();
-        Serial.println("[main] The hop le - Cua da mo.");
+        Serial.println("[main] The hop le - Cua da mo. Da tat bao dong.");
         display.showMessage("CHAO MUNG!", "CUA DA MO");  // Nhom 4
     }
     else if (rfidResult == RFID_REJECTED) {

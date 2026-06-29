@@ -20,6 +20,9 @@ void DoorSystem::init() {
 
     SPI.begin();
     mfrc522.PCD_Init();
+    
+    // In ra version cua RFID de xem mach con song hay da chet
+    mfrc522.PCD_DumpVersionToSerial();
 
     doorServo.setPeriodHertz(50);
     doorServo.attach(SERVO_PIN, 500, 2400);
@@ -51,6 +54,9 @@ void DoorSystem::checkRFID() {
         uid += String(mfrc522.uid.uidByte[i], HEX);
     }
     uid.toUpperCase();
+
+    Serial.print("[RFID] Da quet the! Ma UID la: ");
+    Serial.println(uid);
 
     if (uid == MASTER_RFID_UID_1 || uid == MASTER_RFID_UID_2) {
         lastScanResult = RFID_ACCEPTED;

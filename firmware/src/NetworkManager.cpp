@@ -23,7 +23,7 @@ void initWiFi() {
     
     // Mở bộ nhớ để lấy IP đã lưu
     preferences.begin("smarthome", false);
-    String savedIp = preferences.getString("server_ip", "192.168.x.x");
+    String savedIp = preferences.getString("server_ip", "192.168.1.57");
     
     // Tạo ô nhập liệu cho SERVER_IP
     WiFiManagerParameter custom_server_ip("server_ip", "IP May Tinh (VD: 192.168.1.15)", savedIp.c_str(), 40);
@@ -46,8 +46,8 @@ void initWiFi() {
     preferences.putString("server_ip", inputIp);
     preferences.end();
 
-    // Ghép thành đường dẫn hoàn chỉnh
-    _baseUrl = "http://" + inputIp + ":8000/api/save_data.php";
+    // Ghép thành đường dẫn hoàn chỉnh (Ép cứng IP máy tính để không bị lỗi)
+    _baseUrl = "http://192.168.1.57:8000/api/save_data.php";
 
     Serial.println();
     Serial.println("[WiFi] Ket noi thanh cong!");
