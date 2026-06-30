@@ -33,4 +33,15 @@ $sql_create_table = "CREATE TABLE IF NOT EXISTS temperature_logs (
 if ($conn->query($sql_create_table) === FALSE) {
     die("Loi tao bang: " . $conn->error);
 }
+
+// Bước 5: TỰ ĐỘNG TẠO BẢNG users nếu chưa có
+$sql_create_users_table = "CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+if ($conn->query($sql_create_users_table) === FALSE) {
+    die("Loi tao bang users: " . $conn->error);
+}
 ?>

@@ -1,3 +1,13 @@
+<?php
+// Bắt đầu session
+session_start();
+
+// Kiểm tra nếu chưa đăng nhập thì đá về trang login.php
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +32,15 @@
                 <i class="fa-solid fa-microchip"></i>
                 <h1>IoT Monitor</h1>
             </div>
-            <div class="status-indicator">
-                <span class="pulse-dot"></span>
-                <span id="connection-status">Live Data Active</span>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <span class="pulse-dot"></span>
+                    <span id="connection-status">Live Data Active</span>
+                </div>
+                <a href="logout.php" class="logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Đăng xuất (<?php echo htmlspecialchars($_SESSION['username']); ?>)</span>
+                </a>
             </div>
         </header>
 

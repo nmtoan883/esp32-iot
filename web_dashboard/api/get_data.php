@@ -1,4 +1,15 @@
 <?php
+// Bắt đầu session
+session_start();
+
+// Kiểm tra nếu chưa đăng nhập thì trả về lỗi 401
+if (!isset($_SESSION['user_id'])) {
+    header('Content-Type: application/json');
+    http_response_code(401);
+    echo json_encode(array("error" => "Unauthorized"));
+    exit();
+}
+
 require 'db_connect.php';
 
 // Set headers for JSON response and CORS
